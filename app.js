@@ -4,13 +4,13 @@ const helmet = require('helmet');
 const escape = require('escape-html');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const { celebrate, Joi, errors } = require('celebrate');
+const { /* celebrate, Joi, */ errors } = require('celebrate');
 
 const { limiter } = require('./middlewares/limiter');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { handleError } = require('./middlewares/error');
 
-const { PORT = 3001 } = process.env;
+const { PORT = 3000 } = process.env;
 const app = express();
 
 mongoose.connect('mongodb://localhost:27017/moviesdb', {
@@ -19,7 +19,7 @@ mongoose.connect('mongodb://localhost:27017/moviesdb', {
 
 const options = {
   origin: [
-    'http://localhost:3001',
+    'http://localhost:3000',
     // 'https://express.mesto.nomoredomains.icu',
     // 'http://express.mesto.nomoredomains.icu',
     // 'https://YOUR.github.io',
@@ -31,7 +31,7 @@ const options = {
   credentials: true,
 };
 
-app.use('/', require('./routes/movies'));
+// app.use('/', require('./routes/movies'));
 
 app.use('*', cors(options));
 app.use(express.urlencoded({ extended: true }));

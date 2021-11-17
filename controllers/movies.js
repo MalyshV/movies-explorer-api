@@ -10,10 +10,31 @@ const getMovies = (req, res, next) => {
 
 const postMovie = (req, res, next) => {
   const {
-    country, director, year, description, image, trailer, nameRU, nameEN, thumbnail, movieId
+    country,
+    director,
+    year,
+    description,
+    image,
+    trailer,
+    nameRU,
+    nameEN,
+    thumbnail,
+    movieId,
   } = req.body;
 
-  Movie.create({ country, director, year, description, image, trailer, nameRU, nameEN, thumbnail, movieId, owner: req.user._id })
+  Movie.create({
+    country,
+    director,
+    year,
+    description,
+    image,
+    trailer,
+    nameRU,
+    nameEN,
+    thumbnail,
+    movieId,
+    owner: req.user._id,
+  })
     .then((movie) => res.status(200).send(movie))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -32,7 +53,7 @@ const deleteMovie = (req, res, next) => {
       // проверка на принадлежность фильма данному юзеру
       if (movie) {
         if (movie.owner._id.toString() !== req.user._id) {
-          //throw new NotAllowedError('Вы можете удалять только свои фильмы');
+          // throw new NotAllowedError('Вы можете удалять только свои фильмы');
         }
         Movie.findByIdAndDelete(movieId)
           .then((data) => {
@@ -54,5 +75,5 @@ const deleteMovie = (req, res, next) => {
 module.exports = {
   getMovies,
   postMovie,
-  deleteMovie
+  deleteMovie,
 };

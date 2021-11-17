@@ -1,6 +1,6 @@
-const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 // const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 
 const registerUser = (req, res, next) => {
   const { email, password, name } = req.body;
@@ -33,7 +33,7 @@ const registerUser = (req, res, next) => {
     });
 };
 
-const getCurrentUser = (req, res, next) => {};
+// const getCurrentUser = (req, res, next) => {};
 
 const updateUserInfo = (req, res, next) => {
   const { email, name } = req.body;
@@ -47,10 +47,12 @@ const updateUserInfo = (req, res, next) => {
       if (user) {
         return res.status(200).send(user);
       }
+      throw new Error('nnn');
       // throw new NotFoundError('Пользователь с указанным _id не найден');
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
+        next(err);
         // next(BadRequestError('Переданы некорректные данные при обновлении данных'));
       } else {
         next(err);
@@ -58,14 +60,14 @@ const updateUserInfo = (req, res, next) => {
     });
 };
 
-const login
+// const login
 
-const logOut
+// const logOut
 
 module.exports = {
-  getCurrentUser,
+  // getCurrentUser,
   updateUserInfo,
-  login,
-  logOut,
+  // login,
+  // logOut,
   registerUser,
 };
