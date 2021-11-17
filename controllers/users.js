@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 
 const registerUser = (req, res, next) => {
   const { email, password, name } = req.body;
@@ -12,7 +12,7 @@ const registerUser = (req, res, next) => {
       }
       bcrypt.hash(password, 10, (err, hash) => {
         if (err) {
-          throw new Error('Ошибка сервера');
+          // throw new Error('Ошибка сервера');
         }
         User.create({ email, password: hash, name })
           .then((user) => {
