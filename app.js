@@ -8,6 +8,7 @@ const { celebrate, Joi, errors } = require('celebrate');
 
 const { limiter } = require('./middlewares/limiter');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { handleError } = require('./middlewares/error');
 
 const { PORT = 3001 } = process.env;
 const app = express();
@@ -44,17 +45,7 @@ app.use(limiter);
 
 app.use(errorLogger);
 app.use(errors());
-
-// код ниже вынести в отдельный файл
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res.status(statusCode).send({
-    message: statusCode === 500
-      ? 'Произошла ошибка'
-      : message,
-  });
-  next();
-});
+app.use(handleError);
 
 escape('<script>alert("hacked")</script>');
 
