@@ -1,6 +1,9 @@
 const bcrypt = require('bcryptjs');
 // const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const NotFoundError = require('../errors/not-found-err');
+const AlreadyExistError = require('../errors/already-exist-err');
+const BadRequestError = require('../errors/bad-request-err');
 
 const registerUser = (req, res, next) => {
   const { email, password, name } = req.body;
@@ -8,11 +11,11 @@ const registerUser = (req, res, next) => {
   User.findOne({ email })
     .then((data) => {
       if (data) {
-        // throw new AlreadyExistError('Данный e-mail уже зарегистрирован');
+        throw new AlreadyExistError('Данный e-mail уже зарегистрирован');
       }
       bcrypt.hash(password, 10, (err, hash) => {
         if (err) {
-          // throw new Error('Ошибка сервера');
+          throw new Error('Ошибка сервера');
         }
         User.create({ email, password: hash, name })
           .then((user) => {
@@ -26,7 +29,7 @@ const registerUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        // next(new BadRequestError('Переданы некорректные данные при создании профиля'));
+        next(new BadRequestError('Переданы некорректные данные при создании профиля'));
       } else {
         next(err);
       }
@@ -47,13 +50,11 @@ const updateUserInfo = (req, res, next) => {
       if (user) {
         return res.status(200).send(user);
       }
-      throw new Error('nnn');
-      // throw new NotFoundError('Пользователь с указанным _id не найден');
+      throw new NotFoundError('Пользователь с указанным _id не найден');
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(err);
-        // next(BadRequestError('Переданы некорректные данные при обновлении данных'));
+        next(BadRequestError('Переданы некорректные данные при обновлении данных'));
       } else {
         next(err);
       }

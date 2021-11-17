@@ -9,6 +9,8 @@ const { /* celebrate, Joi, */ errors } = require('celebrate');
 const { limiter } = require('./middlewares/limiter');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { handleError } = require('./middlewares/error');
+// const { registerValidator } = require('./validation/registerValidator');
+// const { loginValidator } = require('./validation/loginValidator');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -54,20 +56,9 @@ app.listen(PORT, () => {
 });
 
 /*
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-    name: Joi.string().min(2).max(30),
-  }),
-}), registerUser);
+app.post('/signup', registerValidator, registerUser);
 
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
-  }),
-}), login);
+app.post('/signin', loginValidator, login);
 
 app.post('/', logOut);
 */

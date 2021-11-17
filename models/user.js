@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-// const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 const isEmail = require('validator/lib/isEmail');
 
 // может проверки убрать в отдельный файл?
@@ -28,9 +28,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('user', userSchema);
-
-/* userSchema.statics.findUserByCredantials = function (email, password) {
+userSchema.statics.findUserByCredantials = function (email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
@@ -44,6 +42,6 @@ module.exports = mongoose.model('user', userSchema);
           return user;
         });
     });
-}; */
+};
 
-// перенести выше, если это мне понадобится
+module.exports = mongoose.model('user', userSchema);
