@@ -49,6 +49,7 @@ const movieSchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
+    select: false, // т.к. не нужно выводить в router.post(movies);
     ref: 'user', // точно надо?
   },
   movieId: {
