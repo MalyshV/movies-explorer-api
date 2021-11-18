@@ -9,7 +9,7 @@ const { limiter } = require('./middlewares/limiter');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { handleError } = require('./middlewares/error');
 const { corsOptions } = require('./middlewares/cors');
-const router = require('./routes/index'); // для подключния всех путей
+const router = require('./routes/index');
 
 const { PORT = 3000 } = process.env;
 const app = express();
