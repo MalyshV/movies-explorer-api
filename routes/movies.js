@@ -1,11 +1,10 @@
 const router = require('express').Router();
 const { getMovies, postMovie, deleteMovie } = require('../controllers/movies');
-const { deleteMovieValidator } = require('../validation/deleteMovieValidator');
-const { saveMovieValidator } = require('../validation/saveMovieValidator');
+const { validateMovieId, validateMovieInfo } = require('../middlewares/validator');
 
-router.get('/movies', getMovies); // возвращает сохраненные юзером фильмы
-router.post('/movies', saveMovieValidator, postMovie); // создает фильм с переданными полями, кроме owner
-router.delete('/movies/movieId', deleteMovieValidator, deleteMovie); // удаляет сохраненный фильм по id
+router.get('/movies', getMovies);
+router.post('/movies', validateMovieInfo, postMovie);
+router.delete('/movies/movieId', validateMovieId, deleteMovie);
 
 module.exports = router;
 
