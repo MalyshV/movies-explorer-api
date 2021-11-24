@@ -1,5 +1,3 @@
-// попробовать реализовать токен не через 'some-secret-key', а через env
-
 const jwt = require('jsonwebtoken');
 const NotExistError = require('../errors/not-exist-err');
 

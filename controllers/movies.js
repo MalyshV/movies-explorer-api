@@ -15,6 +15,7 @@ const postMovie = (req, res, next) => {
   const {
     country,
     director,
+    duration,
     year,
     description,
     image,
@@ -28,6 +29,7 @@ const postMovie = (req, res, next) => {
   Movie.create({
     country,
     director,
+    duration,
     year,
     description,
     image,
@@ -41,7 +43,7 @@ const postMovie = (req, res, next) => {
     .then((movie) => res.status(200).send(movie))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new NotFoundError('Переданы некорректные данные при создании фильма');
+        next(new NotFoundError('Переданы некорректные данные при создании фильма'));
       } else {
         next(err);
       }

@@ -31,7 +31,7 @@ const registerUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные при создании профиля'));
+        throw new BadRequestError('Переданы некорректные данные при создании профиля');
       } else {
         next(err);
       }
