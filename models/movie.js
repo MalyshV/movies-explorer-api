@@ -49,11 +49,11 @@ const movieSchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    select: false, // т.к. не нужно выводить в router.post(movies);
-    ref: 'user', // точно надо?
+    select: false,
+    ref: 'user',
   },
   movieId: {
-    type: mongoose.Schema.Types.ObjectId, // наверняка другая запись!
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
   nameRU: {

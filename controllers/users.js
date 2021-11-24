@@ -5,19 +5,28 @@ const NotFoundError = require('../errors/not-found-err');
 const NotExistError = require('../errors/not-exist-err');
 const AlreadyExistError = require('../errors/already-exist-err');
 const BadRequestError = require('../errors/bad-request-err');
+const {
+  OK_STATUS,
+  repeatEmailErrorMessage,
+  serverErrorMessage,
+  // regErrorMessage,
+  loginErrorMessage,
+  updateUserErrorMessage,
+  notFoundByIdErrorMessage,
+  wrongIdErrorMessage,
+} = require('../utils/constants');
 
-// регистрация
 const registerUser = (req, res, next) => {
   const { email, password, name } = req.body;
 
   User.findOne({ email })
     .then((data) => {
       if (data) {
-        throw new AlreadyExistError('Данный e-mail уже зарегистрирован');
+        throw new AlreadyExistError(repeatEmailErrorMessage);
       }
       bcrypt.hash(password, 10, (err, hash) => {
         if (err) {
-          throw new Error('Ошибка сервера');
+          throw new Error(serverErrorMessage);
         }
         User.create({ email, password: hash, name })
           .then((user) => {
@@ -38,7 +47,6 @@ const registerUser = (req, res, next) => {
     });
 };
 
-// залогиниться
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
@@ -58,11 +66,11 @@ const login = (req, res, next) => {
           sameSite: 'none',
           secure: true,
         })
-          .status(200).send({ token })
+          .status(OK_STATUS).send({ token })
       );
     })
     .catch(() => {
-      next(new NotExistError('Проверьте логин и пароль'));
+      next(new NotExistError(loginErrorMessage));
     });
 };
 
@@ -81,17 +89,16 @@ const getCurrentUser = (req, res, next) => {
       if (user) {
         res.send(user);
       }
-      throw new NotFoundError('Пользователь по указанному _id не найден');
+      throw new NotFoundError(notFoundByIdErrorMessage);
     })
     .catch((err) => {
       if (err.name === 'Cast Error') {
-        next(new BadRequestError('Переданы некорректные данные _id'));
+        next(new BadRequestError(wrongIdErrorMessage));
       }
       next(err);
     });
 };
 
-// изменить данные
 const updateUserInfo = (req, res, next) => {
   const { email, name } = req.body;
 
@@ -102,13 +109,13 @@ const updateUserInfo = (req, res, next) => {
   )
     .then((user) => {
       if (user) {
-        return res.status(200).send(user);
+        return res.status(OK_STATUS).send(user);
       }
-      throw new NotFoundError('Пользователь с указанным _id не найден');
+      throw new NotFoundError(notFoundByIdErrorMessage);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(BadRequestError('Переданы некорректные данные при обновлении данных'));
+        next(BadRequestError(updateUserErrorMessage));
       } else {
         next(err);
       }
