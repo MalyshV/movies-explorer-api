@@ -1,21 +1,20 @@
 const router = require('express').Router();
 const usersRouter = require('./users');
 const moviesRouter = require('./movies');
-// const { registerUser } = require('../controllers/users');
+const auth = require('../middlewares/auth');
+const { validateRegisterData, validateLoginData } = require('../middlewares/validator');
+const { registerUser, login, logOut } = require('../controllers/users');
+const { NotFoundError } = require('../errors/not-found-err');
 
-// и остальные запросы + защита авторизацией + проверки + дописать пути
+router.post('/signup', validateRegisterData, registerUser);
+router.post('/signin', validateLoginData, login);
+router.post('/', logOut);
 
-router.use('/users', usersRouter); // здесь функции для юзеров
-router.use('/movies', moviesRouter); // сюда приходят функции для фильмов
+router.use('/users', auth, usersRouter);
+router.use('/movies', auth, moviesRouter);
 
-// router.post('/signup', registerUser); // + валидация
+router.use('*', () => {
+  throw new NotFoundError('Запрашиваемый ресурс не найден');
+});
 
 module.exports = { router };
-
-// функции ниже перенесла из app, надо с ними разобраться..
-
-/*
-app.post('/signup', validateRegisterData, registerUser);
-app.post('/signin', validateLoginData, login);
-app.post('/', logOut);
-*/
