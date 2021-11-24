@@ -5,7 +5,7 @@ const BadRequestError = require('../errors/bad-request-err');
 const {
   OK_STATUS,
   movieDataErrorMessage,
-  notAllowedErrorMessage,
+  movieOwnerErrorMessage,
   movieDeleteErrorMessage,
   movieIdErrorMessage,
 } = require('../utils/constants');
@@ -64,7 +64,7 @@ const deleteMovie = (req, res, next) => {
     .then((movie) => {
       if (movie) {
         if (movie.owner._id.toString() !== req.user._id) {
-          throw new NotAllowedError(notAllowedErrorMessage);
+          throw new NotAllowedError(movieOwnerErrorMessage);
         }
         Movie.findByIdAndDelete(movieId)
           .then((data) => {

@@ -5,15 +5,16 @@ const NotFoundError = require('../errors/not-found-err');
 const NotExistError = require('../errors/not-exist-err');
 const AlreadyExistError = require('../errors/already-exist-err');
 const BadRequestError = require('../errors/bad-request-err');
+
 const {
   OK_STATUS,
-  repeatEmailErrorMessage,
+  emailErrorMessage,
   serverErrorMessage,
-  // regErrorMessage,
+  regErrorMessage,
   loginErrorMessage,
-  updateUserErrorMessage,
-  notFoundByIdErrorMessage,
-  wrongIdErrorMessage,
+  userUpdateErrorMessage,
+  idNotFoundErrorMessage,
+  idIsNotValidErrorMessage,
 } = require('../utils/constants');
 
 const registerUser = (req, res, next) => {
@@ -22,7 +23,7 @@ const registerUser = (req, res, next) => {
   User.findOne({ email })
     .then((data) => {
       if (data) {
-        throw new AlreadyExistError(repeatEmailErrorMessage);
+        throw new AlreadyExistError(emailErrorMessage);
       }
       bcrypt.hash(password, 10, (err, hash) => {
         if (err) {
@@ -40,7 +41,7 @@ const registerUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new BadRequestError('Переданы некорректные данные при создании профиля');
+        throw new BadRequestError(regErrorMessage);
       } else {
         next(err);
       }
@@ -89,11 +90,11 @@ const getCurrentUser = (req, res, next) => {
       if (user) {
         res.send(user);
       }
-      throw new NotFoundError(notFoundByIdErrorMessage);
+      throw new NotFoundError(idNotFoundErrorMessage);
     })
     .catch((err) => {
       if (err.name === 'Cast Error') {
-        next(new BadRequestError(wrongIdErrorMessage));
+        next(new BadRequestError(idIsNotValidErrorMessage));
       }
       next(err);
     });
@@ -111,11 +112,11 @@ const updateUserInfo = (req, res, next) => {
       if (user) {
         return res.status(OK_STATUS).send(user);
       }
-      throw new NotFoundError(notFoundByIdErrorMessage);
+      throw new NotFoundError(idNotFoundErrorMessage);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(BadRequestError(updateUserErrorMessage));
+        next(BadRequestError(userUpdateErrorMessage));
       } else {
         next(err);
       }
