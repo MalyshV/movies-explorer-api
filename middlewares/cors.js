@@ -3,8 +3,8 @@ const cors = require('cors');
 const options = {
   origin: [
     'http://localhost:3000',
-    // 'https://express.mesto.nomoredomains.icu',
-    // 'http://express.mesto.nomoredomains.icu',
+    // 'https://yourmoviesexplorer.nomoredomains.rocks/',
+    // 'http://yourmoviesexplorer.nomoredomains.rocks/',
     // 'https://YOUR.github.io',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],

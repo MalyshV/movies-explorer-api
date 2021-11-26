@@ -4,7 +4,7 @@ const moviesRouter = require('./movies');
 const auth = require('../middlewares/auth');
 const { validateRegisterData, validateLoginData } = require('../middlewares/validator');
 const { registerUser, login, logOut } = require('../controllers/users');
-const { NotFoundError } = require('../errors/not-found-err');
+const NotFoundError = require('../errors/not-found-err');
 const { pageNotFoundErrorMessage } = require('../utils/constants');
 
 router.post('/signup', validateRegisterData, registerUser);
