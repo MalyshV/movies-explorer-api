@@ -38,8 +38,12 @@ const registerUser = (req, res, next) => {
           .catch(next);
       });
     })
-    .catch(() => {
-      next(new BadRequestError(regErrorMessage));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError(regErrorMessage));
+      } else {
+        next(err);
+      }
     });
 };
 
@@ -54,15 +58,7 @@ const login = (req, res, next) => {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
         sameSite: true,
-      });
-      return (
-        res.cookie('jwt', token, {
-          httpOnly: true,
-          sameSite: 'none',
-          secure: true,
-        })
-          .status(OK_STATUS).send({ token })
-      );
+      }).send({ token });
     })
     .catch(() => {
       next(new NotExistError(loginErrorMessage));
@@ -103,11 +99,14 @@ const updateUserInfo = (req, res, next) => {
       if (user) {
         return res.status(OK_STATUS).send(user);
       }
-      throw new AlreadyExistError(emailErrorMessage);
+      throw new NotFoundError(idNotFoundErrorMessage);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError(userUpdateErrorMessage));
+      }
+      if (err.code === 11000) {
+        next(new AlreadyExistError(emailErrorMessage));
       } else {
         next(err);
       }
