@@ -33,18 +33,10 @@ const movieSchema = new mongoose.Schema({
   trailer: {
     type: String,
     required: true,
-    validate: {
-      validator: (v) => isUrl(v),
-      message: 'Неправильный формат ссылки',
-    },
   },
   thumbnail: {
     type: String,
     required: true,
-    validate: {
-      validator: (v) => isUrl(v),
-      message: 'Неправильный формат ссылки',
-    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
@@ -53,7 +45,7 @@ const movieSchema = new mongoose.Schema({
     ref: 'user',
   },
   movieId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Number,
     required: true,
   },
   nameRU: {

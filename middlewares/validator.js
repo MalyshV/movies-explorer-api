@@ -45,11 +45,11 @@ const validateMovieInfo = celebrate({
     year: Joi.string().required(),
     description: Joi.string().required(),
     image: Joi.string().custom(validateURL).required(),
-    trailer: Joi.string().custom(validateURL).required(),
+    trailer: Joi.string().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
-    thumbnail: Joi.string().custom(validateURL).required(),
-    movieId: Joi.string().length(24).hex(),
+    thumbnail: Joi.string().required(),
+    movieId: Joi.number().required(),
   }),
 });
 
