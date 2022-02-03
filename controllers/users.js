@@ -14,7 +14,6 @@ const {
   loginErrorMessage,
   userUpdateErrorMessage,
   idNotFoundErrorMessage,
-  idIsNotValidErrorMessage,
 } = require('../utils/constants');
 
 const registerUser = (req, res, next) => {
@@ -41,7 +40,7 @@ const registerUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new BadRequestError(regErrorMessage);
+        next(new BadRequestError(regErrorMessage));
       } else {
         next(err);
       }
@@ -55,20 +54,11 @@ const login = (req, res, next) => {
     .then((user) => {
       const { NODE_ENV, JWT_SECRET } = process.env;
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'secret-key', { expiresIn: '7d' });
-      res.send({ token });
       res.cookie('jwt', token, {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
         sameSite: true,
-      });
-      return (
-        res.cookie('jwt', token, {
-          httpOnly: true,
-          sameSite: 'none',
-          secure: true,
-        })
-          .status(OK_STATUS).send({ token })
-      );
+      }).send({ token });
     })
     .catch(() => {
       next(new NotExistError(loginErrorMessage));
@@ -93,9 +83,6 @@ const getCurrentUser = (req, res, next) => {
       throw new NotFoundError(idNotFoundErrorMessage);
     })
     .catch((err) => {
-      if (err.name === 'Cast Error') {
-        next(new BadRequestError(idIsNotValidErrorMessage));
-      }
       next(err);
     });
 };
@@ -116,7 +103,10 @@ const updateUserInfo = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(BadRequestError(userUpdateErrorMessage));
+        next(new BadRequestError(userUpdateErrorMessage));
+      }
+      if (err.code === 11000) {
+        next(new AlreadyExistError(emailErrorMessage));
       } else {
         next(err);
       }
