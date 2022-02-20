@@ -12,10 +12,7 @@ const { corsOptions } = require('./middlewares/cors');
 const { router } = require('./routes/index');
 const config = require('./utils/config');
 
-const BASE_URL = 'https://api.yourmoviesexplorer.nomoredomains.work';
-
-// const { PORT = 3001 } = process.env;
-const { PORT = 3001 } = BASE_URL;
+const { PORT = 3001 } = process.env;
 const app = express();
 
 mongoose.connect(config.db_adress, {
